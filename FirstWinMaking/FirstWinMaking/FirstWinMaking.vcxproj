@@ -80,18 +80,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="FirstWinMaking.rc" />
+    <ResourceCompile Include="FirstWinMaking1.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\ICON&amp;amp%3bCURSOR\animationIcon\gam1229.ani" />
-    <None Include="..\ICON&amp;amp%3bCURSOR\set110_league_of_legends\League of Legends\alternate.cur" />
-    <None Include="..\ICON&amp;amp%3bCURSOR\set110_league_of_legends\League of Legends\text.cur" />
+    <None Include="cursor1.cur" />
+    <None Include="ICON&amp;amp%3bCURSOR\set110_league_of_legends\League of Legends\alternate.cur" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\ICON&amp;amp%3bCURSOR\Fasticon-Angry-Birds-Black-bird.ico" />
-    <Image Include="..\ICON&amp;amp%3bCURSOR\gameOfThrone.bmp" />
+    <Image Include="ICON&amp;amp%3bCURSOR\A_Game_Of_Thrones_board_game_detail.jpg" />
+    <Image Include="ICON&amp;amp%3bCURSOR\Fasticon-Angry-Birds-Black-bird.ico" />
+    <Image Include="ICON&amp;amp%3bCURSOR\gameOfThrone.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

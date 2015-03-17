@@ -1,6 +1,6 @@
 #include <windows.h>
 #include <time.h>
-#include "resource.h"
+#include "resource1.h"
 
 #define szWindowClass	TEXT("First")
 #define szTitle			TEXT("First App")
@@ -9,7 +9,16 @@
 #define MAXHORIZONTAL 800
 #define MAXVERTICAL 600
 
-void makingFigure(HDC hdc);
+// 전역으로 메모리 DC가 이곳에 bit맵을 그려준다. 
+HBITMAP gBitMap;
+
+
+int createWNDClass(OUT WNDCLASSEX& wcex, IN HINSTANCE hInstance);
+int initHWND(OUT HWND& hWnd, IN HINSTANCE hInstance);
+int initAppTitle(IN HWND hWnd, IN HINSTANCE hInstance);
+int initBackground(IN HDC hdc, IN HWND hWnd);
+
+void makingFigure(HDC hdc, int downPosX, int downPosY);
 void makingFollowRect(HDC hdc, int x, int y);
 
 LRESULT CALLBACK WndProc(HWND hWnd
@@ -23,51 +32,19 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 					  int nCmdShow)
 {
 	srand((unsigned int)time(NULL));
-	WNDCLASSEX wcex;
-	 
-	wcex.cbSize = sizeof(WNDCLASSEX);
-	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
-	wcex.lpfnWndProc = (WNDPROC)WndProc;
-	wcex.cbClsExtra = 0;
-	wcex.cbWndExtra = 0;
-	wcex.hInstance = hInstance;
-	
-	//내꺼 아이콘 커서 쓰려면 먼저 hIntance여야 하고
-	// MAKEINTRSOURCE여야 한다. 
-	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
-	wcex.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
-	wcex.hCursor = LoadCursor(hInstance, MAKEINTRESOURCE(IDC_CURSOR1));
-	wcex.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-	
-	//메뉴 추가후 여기서 세팅
-	wcex.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);
-	
-	wcex.lpszClassName = szWindowClass;
 
+	WNDCLASSEX wcex;
+	createWNDClass(wcex, hInstance);
 	if (!RegisterClassEx(&wcex))
 		return 0;
-
-	HWND	hWnd = CreateWindowEx(WS_EX_APPWINDOW
-		, szWindowClass
-		, szTitle
-		, WS_OVERLAPPEDWINDOW
-		, CW_USEDEFAULT
-		, CW_USEDEFAULT
-		, MAXHORIZONTAL
-		, MAXVERTICAL
-		, NULL
-		, NULL
-		, hInstance
-		, NULL);
-
+	
+	HWND hWnd;
+	initHWND(hWnd, hInstance);
 	if (!hWnd)
 		return 0;
 
-	//리소스 사용하는 법
-	const int titleSTRSize = 256;
-	WCHAR appTitle[titleSTRSize];
-	LoadString(hInstance, IDS_TITLE, appTitle, titleSTRSize);
-	SetWindowText(hWnd, appTitle);
+	if (!initAppTitle(hWnd, hInstance))
+		return 0;
 
 	ShowWindow(hWnd, nCmdShow);
 
@@ -93,84 +70,74 @@ LRESULT CALLBACK WndProc(HWND hWnd
 	switch (message)
 	{
 	case WM_CREATE:
-		break;
-	case WM_COMMAND:
-		{
-			//lparam과 wparam은 메세지에 따라서 읽는 방법이 다르다
+	{
 
-			switch (LOWORD(wParam)) //id 구분
-			{
-			case ID_FILE_EXIT:
-				DestroyWindow(hWnd);
-			}
-		}
+	}
+	break;
+	case WM_COMMAND:
+	{
+		//	//lparam과 wparam은 메세지에 따라서 읽는 방법이 다르다
+		//switch (LOWORD(wParam)) //id 구분
+		//{
+		//case ID_FILE_EXIT:
+		//	DestroyWindow(hWnd);
+		//break;
+		//}
+	}
 	case WM_PAINT:
 	{
-	   
-		{
-
 		hdc = BeginPaint(hWnd, &ps);
-		//// 더블 버퍼링
-		//HDC memoryDC = CreateCompatibleDC(hdc);
-		//HBITMAP memoryBitmap = CreateCompatibleBitmap(hdc, MAXHORIZONTAL, MAXVERTICAL);
-		//HBITMAP defaultBitmap = (HBITMAP)SelectObject(memoryDC, memoryBitmap);
+		HDC memoryDC = CreateCompatibleDC(hdc);
+		HBITMAP memoryBitmap = CreateCompatibleBitmap(hdc, MAXHORIZONTAL, MAXVERTICAL);
+		HBITMAP memoryOldBitmap = (HBITMAP)SelectObject(memoryDC, memoryBitmap);
 
-		//HDC imgDC = CreateCompatibleDC(hdc);
-		//HBITMAP hBitmap = LoadBitmap((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE),
-		//	MAKEINTRESOURCE(IDB_BITMAP1));
+		HDC imgDC = CreateCompatibleDC(hdc);
+		HBITMAP imgBitmap = LoadBitmap((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE),
+			MAKEINTRESOURCE(IDB_BITMAP1));
+		HBITMAP imgOldBitmap = (HBITMAP)SelectObject(imgDC, imgBitmap);
 
-		//SelectObject(imgDC, hBitmap);
 
-		//// 메모리로 그려주고
-		//BitBlt(memoryDC, 0, 0, MAXHORIZONTAL, MAXVERTICAL, imgDC, 0, 0, SRCCOPY);
-		//
-		////화면에 그려주고
-		//BitBlt(hdc, 0, 0, MAXHORIZONTAL, MAXVERTICAL, memoryDC, 0, 0, SRCCOPY);
+		BitBlt(memoryDC, 0, 0, MAXHORIZONTAL, MAXVERTICAL, imgDC, 0, 0, SRCCOPY);
+		BitBlt(hdc, 0, 0, MAXHORIZONTAL, MAXVERTICAL, memoryDC, 0, 0, SRCCOPY);
 
-		//SelectObject(hdc, defaultBitmap);
+		SelectObject(memoryDC, memoryOldBitmap);
+		DeleteObject(memoryBitmap);
+		DeleteObject(memoryDC);
 
-		//// 지우고
-		//DeleteObject(hBitmap);
-		//DeleteDC(imgDC);
+		SelectObject(imgDC, imgBitmap);
+		DeleteObject(imgBitmap);
+		DeleteObject(imgDC);
 
-		//DeleteObject(memoryBitmap);
-		//DeleteDC(memoryDC);
-
+		
 		EndPaint(hWnd, &ps);
-		}
 	}
 		break;
 	case WM_LBUTTONDOWN:
-	{
-		OutputDebugString(L"LBUTTONC\n");
-		//int result = MessageBox(NULL, L"왼쪽 클릭", L"LEFT", MB_YESNOCANCEL);
-		/*if (result == IDYES)
-		{
-			MessageBox(NULL, L"왼 클릭", L"left", MB_YESNO);
-		}*/
-		// 사각형 그리기 
-
+	{	
+		int downPosX = LOWORD(lParam);
+		int downPosY = HIWORD(lParam);
 		HDC hdc = GetDC(hWnd);
-		makingFigure(hdc);
+		makingFigure(hdc, downPosX, downPosY);
 		ReleaseDC(hWnd, hdc);
 
-	}
-		break;
-	case WM_RBUTTONDOWN:
-		{
+		InvalidateRect(hWnd, NULL, false);
 
-		}
-		break;
+	}
+	break;
+	case WM_RBUTTONDOWN:
+	{
+
+	}
+	break;
 	case WM_LBUTTONDBLCLK:
 	{
-		OutputDebugString(L"LBUTTONDC\n");
+		//OutputDebugString(L"LBUTTONDC\n");
 	}
 		break;
 	case WM_MOUSEMOVE:
 		{
-			int mouseX = LOWORD(lParam);
+			/*int mouseX = LOWORD(lParam);
 			int mouseY = HIWORD(lParam);
-
 			
 			HDC hdc = GetDC(hWnd);
 			HDC memoryDC = CreateCompatibleDC(hdc);
@@ -192,13 +159,13 @@ LRESULT CALLBACK WndProc(HWND hWnd
 			SelectObject(memoryDC, oldBitmap);
 			DeleteObject(memoryBitmap);
 			DeleteDC(memoryDC);
-			ReleaseDC(hWnd, hdc);
+			ReleaseDC(hWnd, hdc);*/
 		}
 		break;
 	case WM_TIMER:
 		break;
 	case WM_DESTROY:
-		PostQuitMessage(0);
+		//PostQuitMessage(0);
 		return 0;
 	}
 
@@ -207,15 +174,16 @@ LRESULT CALLBACK WndProc(HWND hWnd
 
 
 
-void makingFigure(HDC hdc)
+void makingFigure(HDC hdc, int downPosX, int downPosY)
 {
-	int startX = rand() % MAXHORIZONTAL;
-	int startY = rand() % MAXVERTICAL;
+	HDC memoryDC = CreateCompatibleDC(hdc);
+	HBITMAP memoryBitMap = CreateCompatibleBitmap(hdc, MAXHORIZONTAL, MAXVERTICAL);
 
-	int endX = rand() % MAXHORIZONTAL;
-	int endY = rand() % MAXVERTICAL;
+	int maxRectSize = 400;
+	int rectSize = rand() % maxRectSize / 2;
 
-	HBRUSH defaultBrush, makingBrush;
+	int maxEllipseSize = 300;
+	int ellipseSize = rand() % maxEllipseSize;
 
 	int red = rand() % MAXCOLOR;
 	int green = rand() % MAXCOLOR;
@@ -223,20 +191,30 @@ void makingFigure(HDC hdc)
 
 	int style = rand() % MAXSTYLE;
 
+	HBRUSH defaultBrush, makingBrush;
 	makingBrush = CreateHatchBrush(style, RGB(red, green, blue));
-	defaultBrush = (HBRUSH)SelectObject(hdc, makingBrush);
+	defaultBrush = (HBRUSH)SelectObject(memoryDC, makingBrush);
+	HBITMAP defaultBitmap = (HBITMAP)SelectObject(memoryDC, memoryBitMap);
 
 	if (rand() % 2 == 0)
 	{
-		Ellipse(hdc, startX, startY, endX, endY);
+		Rectangle(memoryDC, downPosX - rectSize, downPosY - rectSize,
+			downPosX + rectSize, downPosY + rectSize);
 	}
 	else
 	{
-		Rectangle(hdc, startX, startY, endX, endY);
+		Ellipse(memoryDC, downPosX - ellipseSize, downPosY - ellipseSize,
+			downPosX + ellipseSize, downPosY + ellipseSize);
 	}
 
+	BitBlt(hdc, 0, 0, MAXHORIZONTAL, MAXVERTICAL, memoryDC, 0, 0, SRCCOPY);
+
+	SelectObject(memoryDC, defaultBitmap);
+	SelectObject(memoryDC, defaultBrush);
 	DeleteObject(makingBrush);
-	SelectObject(hdc, defaultBrush);
+	DeleteObject(memoryBitMap);
+	DeleteDC(memoryDC);
+
 }
 
 void makingFollowRect(HDC hdc, int x, int y)
@@ -250,4 +228,87 @@ void makingFollowRect(HDC hdc, int x, int y)
 
 	SelectObject(hdc, defaultBrush);
 	DeleteObject(makingBrush);
+}
+
+int createWNDClass(OUT WNDCLASSEX& wcex, IN HINSTANCE hInstance)
+{
+	wcex.cbSize = sizeof(WNDCLASSEX);
+	wcex.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+	wcex.lpfnWndProc = (WNDPROC)WndProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = hInstance;
+
+	//내꺼 아이콘 커서 쓰려면 먼저 hIntance여야 하고
+	// MAKEINTRSOURCE여야 한다. 
+	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
+	wcex.hIconSm = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
+	wcex.hCursor = LoadCursor(hInstance, MAKEINTRESOURCE(IDC_CURSOR2));
+	wcex.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+
+	//메뉴 추가후 여기서 세팅
+	wcex.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);
+
+	wcex.lpszClassName = szWindowClass;
+
+	return 1;
+}
+
+int initHWND(OUT HWND& hWnd, IN HINSTANCE hInstance)
+{
+	 hWnd = CreateWindowEx(WS_EX_APPWINDOW
+		, szWindowClass
+		, szTitle
+		, WS_OVERLAPPEDWINDOW
+		, CW_USEDEFAULT
+		, CW_USEDEFAULT
+		, MAXHORIZONTAL
+		, MAXVERTICAL
+		, NULL
+		, NULL
+		, hInstance
+		, NULL);
+
+	 return 1;
+}
+
+int initAppTitle(IN HWND hWnd, IN HINSTANCE hInstance)
+{
+	//리소스 사용하는 법
+	const int titleSTRSize = 256;
+	WCHAR appTitle[titleSTRSize] = { 0, };
+
+	if (!LoadString(hInstance, IDS_TITLE, appTitle, titleSTRSize))
+		return 0;
+
+	if (!SetWindowText(hWnd, appTitle))
+		return 0;
+
+	return 1;
+}
+
+int initBackground(IN HDC hdc, IN HWND hWnd)
+{
+	HDC imgDC = CreateCompatibleDC(hdc);
+	HBITMAP imgBitmap = LoadBitmap((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE),
+		MAKEINTRESOURCE(IDR_BIT1));
+	HBITMAP imgOldBitmap = (HBITMAP)SelectObject(imgDC, imgBitmap);
+
+	HDC memoryDC = CreateCompatibleDC(hdc);
+	HBITMAP memoryBitmap = CreateCompatibleBitmap(hdc, MAXHORIZONTAL, MAXVERTICAL);
+	HBITMAP memoryOldBitmap = (HBITMAP)SelectObject(memoryDC, memoryBitmap);
+	
+	BitBlt(memoryDC, 0, 0, MAXHORIZONTAL, MAXVERTICAL, imgDC, 0, 0, SRCCOPY);
+
+	BitBlt(hdc, 0, 0, MAXHORIZONTAL, MAXVERTICAL, memoryDC, 0, 0, SRCCOPY);
+
+	SelectObject(memoryDC, memoryOldBitmap);
+	DeleteObject(memoryBitmap);
+	DeleteObject(memoryDC);
+
+	SelectObject(imgDC, imgBitmap);
+	DeleteObject(imgBitmap);
+	DeleteObject(imgDC);
+
+	return 1;
 }

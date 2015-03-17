@@ -23,26 +23,31 @@
     <ClInclude Include="resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="resource1.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="FirstWinMaking.rc">
+    <ResourceCompile Include="FirstWinMaking1.rc">
       <Filter>리소스 파일</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\ICON&amp;amp%3bCURSOR\set110_league_of_legends\League of Legends\alternate.cur">
+    <None Include="cursor1.cur">
       <Filter>리소스 파일</Filter>
     </None>
-    <None Include="..\ICON&amp;amp%3bCURSOR\set110_league_of_legends\League of Legends\text.cur">
+    <None Include="ICON&amp;amp%3bCURSOR\set110_league_of_legends\League of Legends\alternate.cur">
       <Filter>리소스 파일</Filter>
     </None>
-    <None Include="..\ICON&amp;amp%3bCURSOR\animationIcon\gam1229.ani" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\ICON&amp;amp%3bCURSOR\Fasticon-Angry-Birds-Black-bird.ico">
+    <Image Include="ICON&amp;amp%3bCURSOR\Fasticon-Angry-Birds-Black-bird.ico">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="..\ICON&amp;amp%3bCURSOR\gameOfThrone.bmp">
+    <Image Include="ICON&amp;amp%3bCURSOR\A_Game_Of_Thrones_board_game_detail.jpg">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="ICON&amp;amp%3bCURSOR\gameOfThrone.bmp">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>
