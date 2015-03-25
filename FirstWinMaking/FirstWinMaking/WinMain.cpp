@@ -28,12 +28,14 @@ int createLinearAndPoint(IN HDC hdc);
 int collisionBoxToBox(IN HDC hdc);
 bool boxToBoxCollisonCheck(Coordinate pos, int startX, int startY, int endX, int endY);
 bool circleToCircleCollisionCheck(int FirstRadius, Coordinate firstCenterPos,
-	int SecondRadius, Coordinate secondCenterPos);
+								  int SecondRadius, Coordinate secondCenterPos);
 int collisionCircleToCircle(IN HDC hdc);
 int collisionBoxToCircle(IN HDC hdc);
 int collisionBoxToCircleNew(IN HDC hdc);
 bool choiceBoxCheckOrCircleCheck(Coordinate boxStartPos, Coordinate boxEndPos,
 	Coordinate circleCenterPos);
+
+void createPoloygon(OUT HDC hdc);
 
 
 void makingFigure(HDC hdc, int downPosX, int downPosY);
@@ -86,7 +88,8 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 			//collisionBoxToBox(hdc);
 			//collisionCircleToCircle(hdc);
 			//collisionBoxToCircle(hdc);
-			collisionBoxToCircleNew(hdc);
+			//collisionBoxToCircleNew(hdc);
+			createPoloygon(hdc);
 		}
 	}
 	
@@ -735,4 +738,41 @@ bool choiceBoxCheckOrCircleCheck(Coordinate boxStartPos, Coordinate boxEndPos,
 		return false;
 
 	return true;
+}
+
+void createPoloygon(OUT HDC hdc)
+{
+	HDC memoryDC = CreateCompatibleDC(hdc);
+	HBITMAP memoryBitmap = CreateCompatibleBitmap(hdc, MAXHORIZONTAL, MAXVERTICAL);
+	SelectObject(memoryDC, memoryBitmap);
+
+	Rectangle(memoryDC, 0, 0, MAXHORIZONTAL, MAXVERTICAL);
+
+	const int pointSize = 10;
+	POINT point[pointSize] = { 0, };
+	point[0].x = 300;
+	point[0].y = 100;
+	point[1].x = 400;
+	point[1].y = 100;
+	point[2].x = 430;
+	point[2].y = 250;
+	point[3].x = 400;
+	point[3].y = 230;
+	point[4].x = 500;
+	point[4].y = 500;
+	point[5].x = 400;
+	point[5].y = 500;
+	point[6].x = 250;
+	point[6].y = 400;
+	point[7].x = 50;
+	point[7].y = 450;
+	point[8].x = 150;
+	point[8].y = 300;
+	point[9].x = 350;
+	point[9].y = 150;
+
+	Polygon(memoryDC, point, 10);
+
+	BitBlt(hdc, 0, 0, MAXHORIZONTAL, MAXVERTICAL, memoryDC, 0, 0, SRCCOPY);
+
 }
