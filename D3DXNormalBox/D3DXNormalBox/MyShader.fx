@@ -23,7 +23,7 @@ VertexOut VS(VertexIn vIn)
 {
 	VertexOut vOut;
 	vOut.pos = mul(float4(vIn.pos, 1.0f), wvp);
-	vOut.color = vIn.color;
+	vOut.color = vIn.color;	
 
 	return vOut;
 }

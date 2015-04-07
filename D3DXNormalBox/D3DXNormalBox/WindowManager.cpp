@@ -1,5 +1,8 @@
 #include "pch.h"
 #include "WindowManager.h"
+#include "Box.h"
+#include "DeviceManager.h"
+#include "Timer.h"
 
 
 
@@ -100,9 +103,16 @@ HWND WindowManager::getHWND() const
 
 bool WindowManager::run()
 {
+	Timer timer;
+	timer.start();
+
+	Box myBox;
+	myBox.init();
+
 	MSG			msg;
 	while (1)
 	{
+
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			if (WM_QUIT == msg.message)
@@ -112,7 +122,16 @@ bool WindowManager::run()
 		}
 		else
 		{
-		
+			timer.tick();
+			static float deltaTime = 0;
+			deltaTime += 0.00005f;
+			myBox.calculateMatrix(deltaTime);
+
+			//myBox.calculateMatrix(timer.deltaTime());
+
+			DeviceManager::getInstance()->render(timer.deltaTime(),
+												 myBox.getVertexBuffer(),
+												 myBox.getIndexBuffer());
 
 		}
 	}

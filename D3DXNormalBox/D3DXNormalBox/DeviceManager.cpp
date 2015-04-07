@@ -16,25 +16,31 @@ HRESULT DeviceManager::initDevice()
 {
 	HRESULT hr = S_OK;
 
-	ID3D11Texture2D* pBackBuffer = nullptr;
-	hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+	hr = createSwapChain();
 
 	if (FAILED(hr))
 		return hr;
 
-	hr = m_pD3dDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pRenderTargetView);
+	hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_pBackBuffer);
 
-	pBackBuffer->Release();
+	if (FAILED(hr))
+		return hr;
+
+	hr = m_pD3dDevice->CreateRenderTargetView(m_pBackBuffer, NULL, &m_pRenderTargetView);
+
+	m_pBackBuffer->Release();
+
+	if (FAILED(hr))
+		return hr;
+
+	hr = createDepthStencilTexture();
+	
 	if (FAILED(hr))
 		return hr;
 
 	// 첫번째 인자는 분할된 화면의 개수를 말한다
 	// 세번째 인자는 깊이와 스탠실 버퍼에 대한 내용
 
-	hr = createDepthStencilTexture();
-	
-	if (FAILED(hr))
-		return hr;
 	m_pImmediateContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
 
 	setViewport();
@@ -44,6 +50,11 @@ HRESULT DeviceManager::initDevice()
 	
 	hr = createShader();
 	
+	if (FAILED(hr))
+		return hr;
+
+	hr = createRenderState();
+
 	if (FAILED(hr))
 		return hr;
 
@@ -224,4 +235,64 @@ HRESULT DeviceManager::createSwapChain()
 		return hr;
 	
 	return hr;
+}
+
+DeviceManager* DeviceManager::getInstance()
+{
+	static DeviceManager deviceManager;
+
+	return &deviceManager;
+}
+
+ID3D11Device* DeviceManager::getD3D11Device() const
+{
+	return m_pD3dDevice;
+}
+
+HRESULT DeviceManager::createRenderState()
+{
+	D3D11_RASTERIZER_DESC rasterizerDesc;
+	ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	rasterizerDesc.CullMode = D3D11_CULL_FRONT;
+	rasterizerDesc.FrontCounterClockwise = false;
+	HRESULT hr = m_pD3dDevice->CreateRasterizerState(&rasterizerDesc, &m_pSolidRS);
+
+	return hr;
+}
+
+ID3D11DeviceContext* DeviceManager::getD3D11DeviceContext() const
+{
+	return m_pImmediateContext;
+}
+
+void DeviceManager::render(float deltaTime, ID3D11Buffer* vertexBuffer, ID3D11Buffer* indexBuffer)
+{
+	float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f };
+
+	m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
+
+	m_pImmediateContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+	// Render
+	// Present 할 때마다 back buffer와 포인터를 swap한다
+
+	// set input Assembler
+	m_pImmediateContext->IASetInputLayout(m_pVertexInputLayout);  // 어떤 레이아웃으로 쓸꺼냐
+
+	//점을 선택하는 방식을 어떻게 할꺼냐
+	m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	UINT stride = sizeof(MyVertex);
+	UINT offset = 0;
+	m_pImmediateContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+	m_pImmediateContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+	//set shader and draw
+	m_pImmediateContext->VSSetShader(m_pVertexShader, NULL, 0);
+	m_pImmediateContext->PSSetShader(m_pPixelShader, NULL, 0);
+
+	m_pImmediateContext->DrawIndexed(36, 0, 0);
+
+	m_pSwapChain->Present(0, 0); // 첫번째 인자 : 갱신 딜레이, 0이 제일 빠르다 
 }
