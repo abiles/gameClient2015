@@ -22,7 +22,7 @@ bool Node::init()
 void Node::initMatrix()
 {
 	m_World = XMMatrixIdentity();
-	XMVECTOR pos = XMVectorSet(0.0f, 0.0f, -5.0f, 1.0f);;
+	XMVECTOR pos = XMVectorSet(0.0f, 0.0f, -5.0f, 1.0f);
 	XMVECTOR target = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	m_View = XMMatrixLookAtLH(pos, target, up);
@@ -32,6 +32,7 @@ void Node::initMatrix()
 	m_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV2,
 		wndSize.m_MaxWidth / (float)wndSize.m_MaxHeight,
 		0.01f, 100.0f);  // near, far plane; 
+
 }
 
 HRESULT Node::createVertexBuffer()

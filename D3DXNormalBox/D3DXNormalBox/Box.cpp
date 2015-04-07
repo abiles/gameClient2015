@@ -130,9 +130,17 @@ void Box::calculateMatrix(float deltaTime)
 	ConstantBuffer cb;
 	cb.wvp = XMMatrixTranspose(wvp);
 
+	// 조명
+	cb.world = XMMatrixTranspose(m_World);
+	cb.lightColor = m_LightColor;
+	cb.lightDir = m_LightDir;
+
+
 	ID3D11DeviceContext* context = DeviceManager::getInstance()->getD3D11DeviceContext();
 	context->UpdateSubresource(m_pConstantBuffer, 0, 0, &cb, 0, 0);
 	context->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 
+	// 조명 
+	context->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 
 }

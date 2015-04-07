@@ -8,6 +8,7 @@ public:
 
 	virtual bool init();
 	virtual void initMatrix();
+	
 	virtual HRESULT createVertexBuffer();
 	virtual HRESULT createIndexBuffer();
 	virtual HRESULT createConstantBuffer();
@@ -26,5 +27,9 @@ protected:
 	XMMATRIX m_World;
 	XMMATRIX m_View;
 	XMMATRIX m_Projection;
+
+	// 조명 관련
+	XMFLOAT4 m_LightDir = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+	XMFLOAT4 m_LightColor = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
 };
 
