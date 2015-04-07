@@ -51,8 +51,8 @@ bool WindowManager::initWindow(TCHAR* title, int width, int height)
 {
 	m_hInstanceHandle = GetModuleHandle(nullptr);
 	m_Title = title;
-	m_MaxWidth = width;
-	m_MaxHeight = height;
+	m_WndSize.m_MaxWidth = width;
+	m_WndSize.m_MaxHeight = height;
 
 	WNDCLASSEX wcex;
 
@@ -78,8 +78,8 @@ bool WindowManager::initWindow(TCHAR* title, int width, int height)
 		, WS_OVERLAPPEDWINDOW
 		, CW_USEDEFAULT
 		, CW_USEDEFAULT
-		, m_MaxWidth
-		, m_MaxHeight
+		, m_WndSize.m_MaxWidth
+		, m_WndSize.m_MaxHeight
 		, NULL
 		, NULL
 		, m_hInstanceHandle
@@ -118,5 +118,15 @@ bool WindowManager::run()
 	}
 
 	return true;
+}
+
+void WindowManager::showWindow(int nCmdShow)
+{
+	ShowWindow(m_WndHandle, nCmdShow);
+}
+
+MySize WindowManager::getWndSize() const
+{
+	return m_WndSize;
 }
 

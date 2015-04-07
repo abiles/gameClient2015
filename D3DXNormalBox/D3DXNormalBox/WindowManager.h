@@ -1,4 +1,5 @@
 #pragma once
+#include "struct.h"
 
 
 class WindowManager
@@ -6,24 +7,24 @@ class WindowManager
 public:
 	WindowManager();
 	~WindowManager();
+	
 
 	static WindowManager*  getInstance();
 	bool initWindow(TCHAR* title, int width, int height);
+	void showWindow(int nCmdShow);
 
 	HWND				 getHWND() const;
+	MySize				 getWndSize() const;
 	
 	bool                 run();
 
 
 private:
 	HINSTANCE     m_hInstanceHandle = NULL;
-
-	int        m_MaxWidth = 800;
-	int        m_MaxHeight = 600;
-
+	HWND       m_WndHandle = NULL;
 	TCHAR*     m_Title = nullptr;
 
-	HWND       m_WndHandle = NULL;
+	MySize	   m_WndSize;
 
 };
 

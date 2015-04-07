@@ -11,6 +11,7 @@
 #include <xnamath.h>
 
 #include <tchar.h>
+#include "struct.h"
 
 #pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "d3dcompiler.lib")
