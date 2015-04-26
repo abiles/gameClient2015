@@ -1,13 +1,21 @@
 #include "pch.h"
 #include "Application.h"
 #include "Director.h"
-#include "Info.h"
+#include "WndInfo.h"
+#include "Renderer.h"
 
 Application* Application::m_Instance = nullptr;
 
-Application::Application()
+LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 {
+	return Director::GetInstance()->WndProc(hWnd, iMessage, wParam, lParam);
+}
 
+Application::Application(HINSTANCE hInstance)
+{
+	m_WndInstanceHandle = hInstance;
+	
+	m_Instance = this;
 }
 
 
@@ -15,43 +23,59 @@ Application::~Application()
 {
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
-{
-	return Director::GetInstance()->WndProc(hWnd, iMessage, wParam, lParam);
-}
 
 bool Application::CreateMyWindow()
 {
-	WNDCLASS WndClass;
+	/*WNDCLASS WndClass;
 
 	WndClass.cbClsExtra = 0;
 	WndClass.cbWndExtra = 0;
 	WndClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	WndClass.hInstance = m_hAppInst;
+	WndClass.hInstance = m_WndInstanceHandle;
 	WndClass.lpfnWndProc = WndProc;
-	WndClass.lpszClassName = L"HeightMap";
+	WndClass.lpszClassName = _T("HeightMap");
 	WndClass.lpszMenuName = NULL;
 	WndClass.style = CS_HREDRAW | CS_VREDRAW;
-	RegisterClass(&WndClass);
+	if (!RegisterClass(&WndClass))
+	return false;
+	*/
+	WNDCLASSEX wcex;
 
+	wcex.cbSize = sizeof(WNDCLASSEX);
+	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.lpfnWndProc = (WNDPROC)WndProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = m_WndInstanceHandle;
+	wcex.hIcon = LoadIcon(m_WndInstanceHandle, IDI_APPLICATION);
+	wcex.hIconSm = LoadIcon(m_WndInstanceHandle, IDI_APPLICATION);
+	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wcex.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
+	wcex.lpszMenuName = NULL;
+	wcex.lpszClassName = _T("HeightMap");
 
-	m_hMainWnd = CreateWindow(L"HeightMap", TITLE, WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT,
-		WNDWIDTH, WNDHEIGHT, NULL, (HMENU)NULL, m_hAppInst, NULL);
-
-	if (m_hMainWnd == NULL)
-	{
+	if (!RegisterClassEx(&wcex))
 		return false;
-	}
-	else
-	{
-		ShowWindow(m_hMainWnd, SW_SHOW);
-		return true;
-	}
 
 
+	/*m_hMainWnd = CreateWindow(_T("HeightMap"), TITLE, WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, CW_USEDEFAULT,
+		WNDWIDTH, WNDHEIGHT, NULL, (HMENU)NULL, m_WndInstanceHandle, NULL);*/
+
+	m_hMainWnd = CreateWindowEx(WS_EX_APPWINDOW
+		, _T("HeightMap")
+		, _T("HeightMap")
+		, WS_OVERLAPPEDWINDOW
+		, CW_USEDEFAULT
+		, CW_USEDEFAULT
+		, 800
+		, 600
+		, NULL
+		, NULL
+		, m_WndInstanceHandle
+		, NULL);
 
 	if (!m_hMainWnd)
 	{
@@ -64,6 +88,15 @@ bool Application::CreateMyWindow()
 		return false;
 	}
 
+	if (m_hMainWnd == NULL)
+	{
+		return false;
+	}
+	else
+	{
+		ShowWindow(m_hMainWnd, SW_SHOW);
+		return true;
+	}
 
 	UpdateWindow(m_hMainWnd);
 
@@ -72,11 +105,6 @@ bool Application::CreateMyWindow()
 
 Application* Application::GetInstance()
 {
-	if (!m_Instance)
-	{
-		m_Instance = new Application();
-	}
-
 	return m_Instance;
 }
 
@@ -98,12 +126,17 @@ int Application::Run()
 		}
 		else
 		{
-			Director::GetInstance()->gameLoop();
+			Director::GetInstance()->GameLoop();
 		}
 	}
 
 	return 0;
 
+}
+
+HWND Application::GetWindowHandle() const
+{
+	return m_hMainWnd;
 }
 
 

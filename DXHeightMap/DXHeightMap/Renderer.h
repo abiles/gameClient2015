@@ -5,13 +5,15 @@ public:
 	Renderer();
 	~Renderer();
 
+	void Render();
+
+private:
 	bool Init();
 
 private:
-	void SwapChainInit();
 
-private:
-	
+	bool					 m_Enable4XMsaa = false;
+	UINT					 m_4xMsaaQuality = 0;
 	ID3D11Device*			 m_pDevice = nullptr;
 	ID3D11DeviceContext*	 m_pImmediateContext = nullptr;
 	IDXGISwapChain*			 m_pSwapChain = nullptr;
@@ -23,6 +25,8 @@ private:
 
 	std::wstring m_MainWndTitle = L"DXHeightMap";
 
-	D3D_DRIVER_TYPE m_D3dDriverType = D3D_DRIVER_TYPE_HARDWARE;
+	D3D_DRIVER_TYPE m_D3DDriverType = D3D_DRIVER_TYPE_HARDWARE;
+private:
+	float m_ClearColor[4];
 };
 

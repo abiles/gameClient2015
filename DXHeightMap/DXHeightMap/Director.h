@@ -7,10 +7,10 @@ public:
 	Director();
 	~Director();
 
-	static Director* GetInstance();
+	static Director*	GetInstance();
 
 	LRESULT CALLBACK	WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
-	void gameLoop();
+	void				GameLoop();
 private:
 	static Director* m_Instance;
 	Renderer*		 m_pRenderer;

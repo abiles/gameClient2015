@@ -2,17 +2,18 @@
 class Application
 {
 public:
-	Application();
+	Application(HINSTANCE hInstance);
 	~Application();
 
-	bool CreateMyWindow();
 	static Application* GetInstance();
+	bool				CreateMyWindow();
 	int					Run();
+	HWND				GetWindowHandle() const;
 
 
 private:
 	static Application* m_Instance;
-	HINSTANCE m_hAppInst = NULL;
+	HINSTANCE m_WndInstanceHandle = NULL;
 	HWND      m_hMainWnd = NULL;
 };
 
