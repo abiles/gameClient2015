@@ -3,10 +3,11 @@
 #include "Director.h"
 #include "Info.h"
 
-
+Application* Application::m_Instance = nullptr;
 
 Application::Application()
 {
+
 }
 
 
@@ -67,6 +68,42 @@ bool Application::CreateMyWindow()
 	UpdateWindow(m_hMainWnd);
 
 	return true;
+}
+
+Application* Application::GetInstance()
+{
+	if (!m_Instance)
+	{
+		m_Instance = new Application();
+	}
+
+	return m_Instance;
+}
+
+int Application::Run()
+{
+	MSG message;
+
+	while (true)
+	{
+		if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
+		{
+			if (message.message == WM_QUIT)
+			{
+				break;
+			}
+
+			TranslateMessage(&message);
+			DispatchMessage(&message);
+		}
+		else
+		{
+			Director::GetInstance()->gameLoop();
+		}
+	}
+
+	return 0;
+
 }
 
 
