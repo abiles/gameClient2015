@@ -5,13 +5,20 @@ public:
 	Renderer();
 	~Renderer();
 
+	bool Init();
+
 private:
-	ID3D11Device*			 m_D3dDevice = nullptr;
-	ID3D11DeviceContext*	 m_D3dImmediateContext = nullptr;
-	IDXGISwapChain*			 m_SwapChain = nullptr;
-	ID3D11Texture2D*		 m_DepthStencilBuffer = nullptr;
-	ID3D11DepthStencilView*  m_DepthStencilView = nullptr;
-	ID3D11RenderTargetView*  m_RenderTargetView = nullptr;
+	void SwapChainInit();
+
+private:
+	
+	ID3D11Device*			 m_pDevice = nullptr;
+	ID3D11DeviceContext*	 m_pImmediateContext = nullptr;
+	IDXGISwapChain*			 m_pSwapChain = nullptr;
+	D3D_FEATURE_LEVEL        m_FeatureLevel = D3D_FEATURE_LEVEL_11_0;
+	ID3D11Texture2D*		 m_pDepthStencilBuffer = nullptr;
+	ID3D11DepthStencilView*  m_pDepthStencilView = nullptr;
+	ID3D11RenderTargetView*  m_pRenderTargetView = nullptr;
 	D3D11_VIEWPORT			 m_ScreenViewPort;
 
 	std::wstring m_MainWndTitle = L"DXHeightMap";
