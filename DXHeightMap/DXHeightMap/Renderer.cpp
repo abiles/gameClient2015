@@ -9,6 +9,15 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
+	ReleaseCOM(m_pRenderTargetView);
+	ReleaseCOM(m_pDepthStencilView);
+	ReleaseCOM(m_pSwapChain);
+	ReleaseCOM(m_pDepthStencilBuffer);
+
+	if (m_pImmediateContext)
+		m_pImmediateContext->ClearState();
+	ReleaseCOM(m_pImmediateContext);
+	ReleaseCOM(m_pDevice);
 }
 
 bool Renderer::Init()
@@ -97,6 +106,8 @@ bool Renderer::Init()
 	vp.TopLeftX = 0; 		// 그리기 시작 원점 x
 	vp.TopLeftY = 0; 		// 그리기 시작 원점 y
 	m_pImmediateContext->RSSetViewports(1, &vp);
+
+	return true;
 
 }
 
