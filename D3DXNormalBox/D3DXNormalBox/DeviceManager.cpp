@@ -140,6 +140,7 @@ HRESULT DeviceManager::createShader()
 	pVSBlob->Release();
 
 
+
 	ID3DBlob* pPSBlob = nullptr;
 
 	hr = D3DX11CompileFromFile(

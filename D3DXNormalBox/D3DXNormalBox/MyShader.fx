@@ -25,8 +25,6 @@ cbuffer ConstantBuffer
 };
 
 
-
-
 VertexOut VS(VertexIn vIn)
 {
 	VertexOut vOut;
@@ -42,8 +40,8 @@ float4 PS(VertexOut vOut) : SV_TARGET
 {
 	float4 finalColor = 0;
 
-	finalColor = saturate(dot((float3) -lightDir, vOut.normal)*lightColor);
-	finalColor = 1.0f;
+	finalColor = saturate(dot((float3) -lightDir, vOut.normal) * lightColor);
+	finalColor.a = 1.0f;
 
 	return finalColor;
 }

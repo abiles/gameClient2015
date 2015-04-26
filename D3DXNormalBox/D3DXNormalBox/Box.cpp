@@ -132,8 +132,8 @@ void Box::calculateMatrix(float deltaTime)
 
 	// Α¶Έν
 	cb.world = XMMatrixTranspose(m_World);
-	cb.lightColor = m_LightColor;
 	cb.lightDir = m_LightDir;
+	cb.lightColor = m_LightColor;
 
 
 	ID3D11DeviceContext* context = DeviceManager::getInstance()->getD3D11DeviceContext();
