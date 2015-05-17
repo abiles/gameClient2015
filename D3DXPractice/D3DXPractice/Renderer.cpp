@@ -257,3 +257,8 @@ Renderer* Renderer::GetInstance()
 
 	return &SingletonRenderer;
 }
+
+ID3D11DeviceContext* Renderer::GetDeviceContext() const
+{
+	return m_D3dImmediateContext;
+}

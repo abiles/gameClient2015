@@ -19,6 +19,8 @@ Shader::~Shader()
 	ReleaseCOM(m_VertexLayout);
 	ReleaseCOM(m_VertexShader);
 	ReleaseCOM(m_PixelShader);
+	ReleaseCOM(m_VSBlob);
+	ReleaseCOM(m_ErrorBlob);
 
 }
 
@@ -30,17 +32,15 @@ void Shader::CreateShader()
 
 void Shader::CreateVertexShader()
 {
-	ID3DBlob* errorBlob = nullptr;
-	ID3DBlob* VSBlob = nullptr;
 
 	HRESULT hr = D3DX11CompileFromFile(L"MyShader.fx", 0, 0,
 		"VS", "vs_5_0", 0,
 		0, 0,
-		&VSBlob, &errorBlob, 0);
+		&m_VSBlob, &m_ErrorBlob, 0);
 
 	hr = GET_DEVICE()->CreateVertexShader(
-		VSBlob->GetBufferPointer(),
-		VSBlob->GetBufferSize(),
+		m_VSBlob->GetBufferPointer(),
+		m_VSBlob->GetBufferSize(),
 		nullptr,
 		&m_VertexShader);
 
@@ -56,10 +56,9 @@ void Shader::CreateVertexShader()
 
 	UINT   numElements = ARRAYSIZE(layout);
 
-	hr = GET_DEVICE()->CreateInputLayout(layout, numElements, VSBlob->GetBufferPointer(),
-		VSBlob->GetBufferSize(), &m_VertexLayout);
+	hr = GET_DEVICE()->CreateInputLayout(layout, numElements, m_VSBlob->GetBufferPointer(),
+		m_VSBlob->GetBufferSize(), &m_VertexLayout);
 
-	VSBlob->Release();
 }
 
 void Shader::CreatePixelShader()

@@ -10,6 +10,7 @@ Node::Node()
 
 Node::~Node()
 {
+	ReleaseCOM(m_VertexBuffer);
 }
 
 void Node::addChild(Node* inputNode)

@@ -46,6 +46,9 @@
     <ClInclude Include="Box.h">
       <Filter>Node</Filter>
     </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>Node</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Director.cpp">
@@ -77,6 +80,9 @@
     </ClCompile>
     <ClCompile Include="KeyStateManager.cpp" />
     <ClCompile Include="Box.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
+    <ClCompile Include="Triangle.cpp">
       <Filter>Node</Filter>
     </ClCompile>
   </ItemGroup>

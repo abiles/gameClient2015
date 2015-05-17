@@ -2,6 +2,7 @@
 
 #define GET_DEVICE() Renderer::GetInstance()->GetDevice()
 #define GET_RENDERER() Renderer::GetInstance()
+#define GET_DEVICECONTEXT() Renderer::GetInstance()->GetDeviceContext() 
 
 class Renderer
 {
@@ -13,7 +14,8 @@ public:
 	
 	void Render();
 
-	ID3D11Device* GetDevice() const;
+	ID3D11Device*		 GetDevice() const;
+	ID3D11DeviceContext* GetDeviceContext() const;
 
 private:
 	bool					 Init();

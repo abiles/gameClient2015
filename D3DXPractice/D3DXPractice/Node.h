@@ -5,6 +5,12 @@
 class Node
 {
 public:
+	struct MyVertex
+	{
+		XMFLOAT3 pos;
+		XMFLOAT4 color;
+	};
+
 	Node();
 	virtual ~Node();
 
@@ -14,5 +20,7 @@ protected:
 	std::vector<Node*> havingNodes;
 	int defaultVectorSize = 10;
 	
+	ID3D11Buffer* m_VertexBuffer = nullptr;
+
 };
 

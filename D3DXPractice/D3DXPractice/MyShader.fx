@@ -1,3 +1,8 @@
+cbuffer cbPerObject
+{
+	float4x4 gWVP;
+};
+
 struct    VertexIn
 {
 	float3   pos : POSITION;

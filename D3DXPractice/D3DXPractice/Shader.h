@@ -37,6 +37,10 @@ private:
 	ID3D11Buffer* m_VertexBuffer = nullptr;
 	ID3D11Buffer* m_IndexBuffer = nullptr;
 
+	ID3DBlob* m_VSBlob = nullptr;
+	ID3DBlob* m_ErrorBlob = nullptr;
+
+
 
 };
 
