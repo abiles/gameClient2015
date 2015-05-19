@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Director.h"
 #include "Triangle.h"
+#include "HeightMap.h"
 
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -50,22 +51,6 @@ bool Application::CreateMyWindow()
 		return true;
 	}
 
-
-
-	//if (!m_hMainWnd)
-	//{
-	//	DWORD err = GetLastError();
-	//	TCHAR buffer[200] = { 0, };
-	//	wsprintf(buffer, L"getlasterror : %d", err);
-	//	MessageBox(0, buffer, 0, 0);
-
-	//	MessageBox(0, L"CreateWindow Failed.", 0, 0);
-	//	return false;
-	//}
-
-
-	UpdateWindow(m_hMainWnd);
-
 	return true;
 }
 
@@ -106,12 +91,13 @@ int Application::GetWndHeight() const
 int Application::Run()
 {
 	MSG message;
-
-	// 이 위치에 삼각형을 만들어야 되는구나. 
 	
-	Triangle triangle;
+	//Triangle triangle;
+	//triangle.Init();
 
-	triangle.Init();
+	HeightMap heightMap;
+	heightMap.Init();
+
 	
 	while (true)
 	{
@@ -127,7 +113,7 @@ int Application::Run()
 		}
 		else
 		{
-			Director::GetInstance()->GameLoop(triangle);
+			Director::GetInstance()->GameLoop(heightMap);
 		}
 	}
 

@@ -7,9 +7,8 @@ public:
 	Triangle();
 	~Triangle();
 
-	void CreateVertexBuffer();
+	void CreateVertexBuffer() override;
 	void Init() override;
-	//void DrawByVertex() override;
 
 private:
 

@@ -55,6 +55,12 @@
     <ClInclude Include="Layer.h">
       <Filter>Layer</Filter>
     </ClInclude>
+    <ClInclude Include="HeightMap.h">
+      <Filter>Node</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMapShader.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Director.cpp">
@@ -94,12 +100,21 @@
     <ClCompile Include="Layer.cpp">
       <Filter>Layer</Filter>
     </ClCompile>
+    <ClCompile Include="HeightMap.cpp">
+      <Filter>Node</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightMapShader.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="TriangleShader.fx">
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="DefaultShader.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="HeightMapShader.fx">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

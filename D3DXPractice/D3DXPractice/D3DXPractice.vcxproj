@@ -92,6 +92,8 @@
     <ClInclude Include="Box.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Director.h" />
+    <ClInclude Include="HeightMap.h" />
+    <ClInclude Include="HeightMapShader.h" />
     <ClInclude Include="KeyStateManager.h" />
     <ClInclude Include="Layer.h" />
     <ClInclude Include="Node.h" />
@@ -106,6 +108,8 @@
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Director.cpp" />
+    <ClCompile Include="HeightMap.cpp" />
+    <ClCompile Include="HeightMapShader.cpp" />
     <ClCompile Include="KeyStateManager.cpp" />
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="Node.cpp" />
@@ -121,6 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DefaultShader.fx" />
+    <FxCompile Include="HeightMapShader.fx" />
     <FxCompile Include="TriangleShader.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

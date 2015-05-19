@@ -157,12 +157,10 @@ void Renderer::Render(Node& node)
 	// Clear
 	m_D3dImmediateContext->ClearRenderTargetView(m_RenderTargetView, ClearColor);
 
-	node.DrawByVertex();
+	node.DrawByIndex();
 
 	// Render
 	m_SwapChain->Present(0, 0);           // 첫번째 인자 : 갱신 딜레이 
-
-	
 }
 
 void Renderer::OnResize()
