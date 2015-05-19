@@ -5,7 +5,6 @@
 
 Triangle::Triangle()
 {
-	CreateVertexBuffer();
 }
 
 
@@ -14,16 +13,23 @@ Triangle::~Triangle()
 	
 }
 
+void Triangle::Init()
+{
+	Node::Init();
+
+	CreateVertexBuffer();
+}
+
 void Triangle::CreateVertexBuffer()
 {
 	MyVertex	 vertices[] =
 	{
-		{ XMFLOAT3(0.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(0.5f, 0.5f, 1.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(-0.5f, -0.5f, 1.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3(0.0f, 1.0f, 1.0f)},
+		{ XMFLOAT3(0.5f, 0.5f, 1.0f)},
+		{ XMFLOAT3(-0.5f, -0.5f, 1.0f)},
 	};
 
-	D3D11_BUFFER_DESC    bd;
+	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 	bd.ByteWidth = sizeof(vertices);
 	bd.Usage = D3D11_USAGE_DEFAULT;
@@ -40,3 +46,5 @@ void Triangle::CreateVertexBuffer()
 	UINT offset = 0;
 	GET_DEVICECONTEXT()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 }
+
+

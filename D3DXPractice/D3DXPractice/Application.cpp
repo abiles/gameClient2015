@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "Application.h"
 #include "Director.h"
+#include "Triangle.h"
 
-Application* Application::m_Instance = nullptr;
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -11,7 +11,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 Application::Application()
 {
-	m_Instance = this;
+
 }
 
 
@@ -83,7 +83,9 @@ bool Application::Init()
 
 Application* Application::GetInstance()
 {
-	return m_Instance;
+	static Application instance;
+	
+	return &instance;
 }
 
 HWND Application::GetWndHandle() const
@@ -105,6 +107,12 @@ int Application::Run()
 {
 	MSG message;
 
+	// 이 위치에 삼각형을 만들어야 되는구나. 
+	
+	Triangle triangle;
+
+	triangle.Init();
+	
 	while (true)
 	{
 		if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
@@ -119,7 +127,7 @@ int Application::Run()
 		}
 		else
 		{
-			Director::GetInstance()->GameLoop();
+			Director::GetInstance()->GameLoop(triangle);
 		}
 	}
 

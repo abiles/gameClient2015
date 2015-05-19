@@ -16,6 +16,9 @@
     <Filter Include="Node">
       <UniqueIdentifier>{998045d6-e1e5-4ef0-aebc-05e8f7b6a19b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Layer">
+      <UniqueIdentifier>{b75e189d-8d3e-4123-8ec1-279ef84e29d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -48,6 +51,9 @@
     </ClInclude>
     <ClInclude Include="Triangle.h">
       <Filter>Node</Filter>
+    </ClInclude>
+    <ClInclude Include="Layer.h">
+      <Filter>Layer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -85,9 +91,15 @@
     <ClCompile Include="Triangle.cpp">
       <Filter>Node</Filter>
     </ClCompile>
+    <ClCompile Include="Layer.cpp">
+      <Filter>Layer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="MyShader.fx">
+    <FxCompile Include="TriangleShader.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="DefaultShader.fx">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

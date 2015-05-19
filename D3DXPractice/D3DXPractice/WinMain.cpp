@@ -10,16 +10,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-	//BoxApp theBox(hInstance);
-	//if (!theBox.init())
-	//	return false;
+	Application::GetInstance()->Init();
 
-	//return theBox.run();
-
-	Application myApplication;
-
-	myApplication.Init();
-
-	return myApplication.Run();
+	return Application::GetInstance()->Run();
 
 }

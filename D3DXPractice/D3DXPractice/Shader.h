@@ -1,6 +1,6 @@
 #pragma once
 
-#define  GET_SHADER() Shader::GetInstance()
+#define  GET_TRIANGLE_SHADER() Shader::GetInstance()
 
 struct MyVertex
 {
@@ -25,6 +25,7 @@ public:
 	ID3D11PixelShader*  GetPixelShader();
 	ID3D11Buffer*		GetVertexBuffer();
 	ID3D11Buffer*       GetIndexBuffer();
+	ID3DBlob*           GetVSBlob() const;
 
 private:
 	void CreateVertexShader();

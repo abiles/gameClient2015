@@ -7,8 +7,6 @@
 Shader::Shader()
 {
 	CreateShader();
-	CreateVertexBuffer();
-	CreateIndexBuffer();
 }
 
 
@@ -33,7 +31,7 @@ void Shader::CreateShader()
 void Shader::CreateVertexShader()
 {
 
-	HRESULT hr = D3DX11CompileFromFile(L"MyShader.fx", 0, 0,
+	HRESULT hr = D3DX11CompileFromFile(L"DefaultShader.fx", 0, 0,
 		"VS", "vs_5_0", 0,
 		0, 0,
 		&m_VSBlob, &m_ErrorBlob, 0);
@@ -44,21 +42,6 @@ void Shader::CreateVertexShader()
 		nullptr,
 		&m_VertexShader);
 
-
-	//////////// layout
-	D3D11_INPUT_ELEMENT_DESC	 layout[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-
-	};
-	//////////////////
-
-	UINT   numElements = ARRAYSIZE(layout);
-
-	hr = GET_DEVICE()->CreateInputLayout(layout, numElements, m_VSBlob->GetBufferPointer(),
-		m_VSBlob->GetBufferSize(), &m_VertexLayout);
-
 }
 
 void Shader::CreatePixelShader()
@@ -67,13 +50,13 @@ void Shader::CreatePixelShader()
 	ID3DBlob* PSBlob = nullptr;
 	ID3DBlob* errorBlob = nullptr;
 
-	D3DX11CompileFromFile(L"MyShader.fx", 0, 0,
+	D3DX11CompileFromFile(L"DefaultShader.fx", 0, 0,
 		"PS", "ps_5_0", 0,
 		0, 0,
 		&PSBlob, &errorBlob, 0);
 
-	GET_DEVICE()->CreatePixelShader(PSBlob->GetBufferPointer(), PSBlob->GetBufferSize(),
-		0, &m_PixelShader);
+	HRESULT hr = GET_DEVICE()->CreatePixelShader(PSBlob->GetBufferPointer(), PSBlob->GetBufferSize(),
+		nullptr, &m_PixelShader);
 
 	PSBlob->Release();
 }
@@ -173,4 +156,9 @@ Shader* Shader::GetInstance()
 	static Shader singletonShader;
 
 	return &singletonShader;
+}
+
+ID3DBlob* Shader::GetVSBlob() const
+{
+	return m_VSBlob;
 }

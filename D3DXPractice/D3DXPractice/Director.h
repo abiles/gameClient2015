@@ -3,6 +3,8 @@
 
 class Camera;
 class KeyStateManager;
+class Node;
+
 class Director
 {
 public:
@@ -12,7 +14,7 @@ public:
 	static Director*	GetInstance();
 
 	LRESULT CALLBACK	WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
-	void				GameLoop();
+	void				GameLoop(Node& node);
 	void                CameraWalkByKeyState();
 
 private:

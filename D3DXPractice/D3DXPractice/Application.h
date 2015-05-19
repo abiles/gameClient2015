@@ -3,8 +3,7 @@
 class Application
 {
 public:
-	Application();
-	~Application();
+	
 	
 
 	static Application* GetInstance();
@@ -20,9 +19,12 @@ public:
 
 		
 private:
+	Application();
+	~Application();
+
 	bool	  CreateMyWindow();
 
-	static Application* m_Instance;
+private:
 	HWND				m_hMainWnd;
 	HINSTANCE			m_hInstance;
 	int					m_WndWidth = 800;

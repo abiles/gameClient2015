@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "KeyStateManager.h"
+#include "Node.h"
 
 
 Director::Director()
@@ -67,12 +68,13 @@ LRESULT CALLBACK Director::WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPAR
 	return (DefWindowProc(hWnd, iMessage, wParam, lParam));
 }
 
-void Director::GameLoop()
+void Director::GameLoop(Node& node)
 {
-	m_KeyStateManager->KeyInput();
-	CameraWalkByKeyState();
+	//m_KeyStateManager->KeyInput();
+	//CameraWalkByKeyState();
 
-	GET_RENDERER()->Render();
+	//node.DrawByVertex();
+	GET_RENDERER()->Render(node);
 }
 
 void Director::CameraWalkByKeyState()

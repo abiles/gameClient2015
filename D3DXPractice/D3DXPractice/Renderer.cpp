@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Shader.h"
 #include "Director.h"
+#include "Node.h"
 
 Renderer::Renderer()
 {
@@ -149,29 +150,14 @@ bool Renderer::Init()
 	return true;
 }
 
-void Renderer::Render()
+void Renderer::Render(Node& node)
 {
-	float        ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; //red,green,blue,alpha
+	float        ClearColor[4] = { 0.0f, 0.0f, 0.5f, 1.0f }; //red,green,blue,alpha
 
 	// Clear
 	m_D3dImmediateContext->ClearRenderTargetView(m_RenderTargetView, ClearColor);
 
-	// Set Input Assembler 
-	m_D3dImmediateContext->IASetInputLayout(GET_SHADER()->GetVertexLayout());
-	m_D3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	UINT stride = sizeof(MyVertex);
-	UINT offset = 0;
-	ID3D11Buffer* tmpVertexBuffer = GET_SHADER()->GetVertexBuffer();
-	m_D3dImmediateContext->IASetVertexBuffers(0, 1, &tmpVertexBuffer, &stride, &offset);
-	m_D3dImmediateContext->IASetIndexBuffer(GET_SHADER()->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
-
-
-	// Set Shader and Draw
-	m_D3dImmediateContext->VSSetShader(GET_SHADER()->GetVertexShader(), NULL, 0);
-	m_D3dImmediateContext->PSSetShader(GET_SHADER()->GetPixelShader(), NULL, 0);
-	m_D3dImmediateContext->DrawIndexed(6, 0 , 0);
-
+	node.DrawByVertex();
 
 	// Render
 	m_SwapChain->Present(0, 0);           // 첫번째 인자 : 갱신 딜레이 
