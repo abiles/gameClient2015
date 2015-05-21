@@ -4,12 +4,12 @@
 #define GET_RENDERER() Renderer::GetInstance()
 #define GET_DEVICECONTEXT() Renderer::GetInstance()->GetDeviceContext() 
 
-class Node;
+class Layer;
 class Renderer
 {
 public:
 	static Renderer*	GetInstance();
-	void Render(Node& node);
+	void Render(Layer& node);
 
 	ID3D11Device*		 GetDevice() const;
 	ID3D11DeviceContext* GetDeviceContext() const;

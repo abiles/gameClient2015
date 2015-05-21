@@ -13,6 +13,7 @@ public:
 	struct ConstantBuffer
 	{
 		XMFLOAT4X4 m_WVP;
+		XMFLOAT4X4 m_World;		
 	};
 
 	Node();
@@ -37,16 +38,14 @@ protected:
 	std::vector<Node*> m_HavingNodes;
 	int defaultVectorSize = 10;
 	
+
 	ID3D11Buffer*		m_VertexBuffer = nullptr;
 	ID3D11Buffer*		m_IndexBuffer = nullptr;
+	ID3D11Buffer*		m_ConstantBuffer = nullptr;
 	ID3D11InputLayout*  m_InputLayout = nullptr;
-	UINT				m_Stride = sizeof(MyVertex);
+	UINT				m_Stride = 0;
 	
 	XMFLOAT4X4			m_World;
-	XMFLOAT4X4			m_View;
-	XMFLOAT4X4			m_Projection;
-
-	
 
 };
 

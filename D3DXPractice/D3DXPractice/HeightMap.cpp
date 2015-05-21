@@ -2,6 +2,8 @@
 #include "HeightMap.h"
 #include "Renderer.h"
 #include "HeightMapShader.h"
+#include "Director.h"
+#include "Camera.h"
 
 HeightMap::HeightMap()
 {
@@ -14,12 +16,15 @@ HeightMap::~HeightMap()
 
 void HeightMap::Init()
 {
+	Node::InitMatrix();
+
 	LoadHeightMap();
 	CreateVertexLayOut();
 	CreateVertexBuffer();
 	CreateIndexBuffer();
 	CreateConstantBuffer();
 	LoadTexture();
+	CreateRenderState();
 }
 
 void HeightMap::LoadHeightMap()
@@ -49,15 +54,22 @@ void HeightMap::CreateVertexLayOut()
 	D3D11_INPUT_ELEMENT_DESC	 layout[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD0", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	UINT   numElements = ARRAYSIZE(layout);
 	ID3DBlob* vsBlob = GET_HM_SHADER()->GetVSBlob();
 
-	GET_DEVICE()->CreateInputLayout(layout, numElements, vsBlob->GetBufferPointer(),
+	HRESULT hr = GET_DEVICE()->CreateInputLayout(layout, numElements, vsBlob->GetBufferPointer(),
 	vsBlob->GetBufferSize(), &m_InputLayout);
+
+	if (hr != S_OK)
+	{
+		char buffer[1000] = { 0, };
+		sprintf_s(buffer, 1000, " last error : %d", GetLastError());
+		MessageBoxA(NULL, buffer, "hr error", MB_ICONWARNING | MB_CANCELTRYCONTINUE | MB_DEFBUTTON2);
+	}
 	
 }
 
@@ -89,7 +101,14 @@ void HeightMap::CreateVertexBuffer()
 	D3D11_SUBRESOURCE_DATA InitData;
 	ZeroMemory(&InitData, sizeof(InitData));
 	InitData.pSysMem = heightmapVertex;
-	GET_DEVICE()->CreateBuffer(&bd, &InitData, &m_VertexBuffer);
+	HRESULT hr = GET_DEVICE()->CreateBuffer(&bd, &InitData, &m_VertexBuffer);
+	
+	if (hr != S_OK)
+	{
+		char buffer[1000] = { 0, };
+		sprintf_s(buffer, 1000, "last error : %d", GetLastError());
+		MessageBoxA(NULL, buffer, "hr error", MB_ICONWARNING | MB_CANCELTRYCONTINUE | MB_DEFBUTTON2);
+	}
 
 }
 
@@ -129,7 +148,14 @@ void HeightMap::CreateIndexBuffer()
 	D3D11_SUBRESOURCE_DATA iinitData;
 	ZeroMemory(&iinitData, sizeof(iinitData));
 	iinitData.pSysMem = indices;
-	GET_DEVICE()->CreateBuffer(&ibd, &iinitData, &m_IndexBuffer);
+	HRESULT hr = GET_DEVICE()->CreateBuffer(&ibd, &iinitData, &m_IndexBuffer);
+
+	if (hr != S_OK)
+	{
+		char buffer[1000] = { 0, };
+		sprintf_s(buffer, 1000, "last error : %d", GetLastError());
+		MessageBoxA(NULL, buffer, "hr error", MB_ICONWARNING | MB_CANCELTRYCONTINUE | MB_DEFBUTTON2);
+	}
 
 
 }
@@ -143,7 +169,14 @@ void HeightMap::CreateConstantBuffer()
 	cbd.ByteWidth = sizeof(ConstantBuffer);
 	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	cbd.CPUAccessFlags = 0;
-	GET_DEVICE()->CreateBuffer(&cbd, NULL, &m_HeightConstantBuffer);
+
+	HRESULT hr = GET_DEVICE()->CreateBuffer(&cbd, NULL, &m_ConstantBuffer);
+	if (hr != S_OK)
+	{
+		char buffer[1000] = { 0, };
+		sprintf_s(buffer, 1000, "last error : %d", GetLastError());
+		MessageBoxA(NULL, buffer, "hr error", MB_ICONWARNING | MB_CANCELTRYCONTINUE | MB_DEFBUTTON2);
+	}
 
 }
 
@@ -151,11 +184,18 @@ void HeightMap::LoadTexture()
 {
 	HRESULT   hr = D3DX11CreateShaderResourceViewFromFile(
 		GET_DEVICE(),
-		L"Texture/images.jpg", 			
+		L"Texture/heightMap.jpg", 			
 		NULL, 			
 		NULL,					
 		&m_TextureRV, 	
 		NULL);
+	
+	if (hr != S_OK)
+	{
+		char buffer[1000] = { 0, };
+		sprintf_s(buffer, 1000, "last error : %d", GetLastError());
+		MessageBoxA(NULL, buffer, "hr error", MB_ICONWARNING | MB_CANCELTRYCONTINUE | MB_DEFBUTTON2);
+	}
 
 	D3D11_SAMPLER_DESC 	sampDesc;
 	ZeroMemory(&sampDesc, sizeof(sampDesc));
@@ -169,6 +209,12 @@ void HeightMap::LoadTexture()
 
 	hr = GET_DEVICE()->CreateSamplerState(&sampDesc, &m_SamplerLinear); // SamplerState 积己
 
+	if (hr != S_OK)
+	{
+		char buffer[1000] = { 0, };
+		sprintf_s(buffer, 1000, "last error : %d", GetLastError());
+		MessageBoxA(NULL, buffer, "hr error", MB_ICONWARNING | MB_CANCELTRYCONTINUE | MB_DEFBUTTON2);
+	}
 }
 
 void HeightMap::DrawByVertex()
@@ -179,20 +225,43 @@ void HeightMap::DrawByVertex()
 
 void HeightMap::DrawByIndex()
 {
+	XMMATRIX world = XMLoadFloat4x4(&m_World);
+	XMMATRIX wvp = world * GET_DIRECTOR()->GetCamera()->ViewProj();
+	
+	ConstantBuffer cb;
+	XMStoreFloat4x4(&cb.m_WVP, XMMatrixTranspose(wvp));
+	XMStoreFloat4x4(&cb.m_World, XMMatrixTranspose(world));
+
+	GET_DEVICECONTEXT()->UpdateSubresource(m_ConstantBuffer, 0, 0, &cb, 0, 0);
+	GET_DEVICECONTEXT()->VSSetConstantBuffers(0, 1, &m_ConstantBuffer);
+
 	// Set Input Assembler 
 	GET_DEVICECONTEXT()->IASetInputLayout(m_InputLayout);
 	GET_DEVICECONTEXT()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	
+	// Set Shader and Draw
+	GET_DEVICECONTEXT()->VSSetShader(GET_HM_SHADER()->GetVertexShader(), NULL, 0);
+	GET_DEVICECONTEXT()->PSSetShader(GET_HM_SHADER()->GetPixelShader(), NULL, 0);
+	GET_DEVICECONTEXT()->PSSetShaderResources(0, 1, &m_TextureRV);
+	GET_DEVICECONTEXT()->PSSetSamplers(0, 1, &m_SamplerLinear);
 
-	UINT stride = sizeof(MyVertex);
+	GET_DEVICECONTEXT()->RSSetState(m_SolidRS);
+
+	UINT stride = sizeof(HeightVertex);
 	UINT offset = 0;
 	GET_DEVICECONTEXT()->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 	GET_DEVICECONTEXT()->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-	// Set Shader and Draw
-	GET_DEVICECONTEXT()->VSSetShader(GET_HM_SHADER()->GetVertexShader(), NULL, 0);
-	GET_DEVICECONTEXT()->PSSetShader(GET_HM_SHADER()->GetPixelShader(), NULL, 0);
 	GET_DEVICECONTEXT()->DrawIndexed(m_IndexSize, 0, 0);
+}
 
-	GET_DEVICECONTEXT()->PSSetShaderResources(0, 1, &m_TextureRV);
-	GET_DEVICECONTEXT()->PSSetSamplers(0, 1, &m_SamplerLinear);
+void HeightMap::CreateRenderState()
+{
+	D3D11_RASTERIZER_DESC rasterizerDesc;
+	ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+	rasterizerDesc.FillMode = D3D11_FILL_SOLID;		// Fill 可记
+	rasterizerDesc.CullMode = D3D11_CULL_FRONT;	// Culling 可记
+	rasterizerDesc.FrontCounterClockwise = false;		// 菊/缔搁 肺流 急琶
+
+	GET_DEVICE()->CreateRasterizerState(&rasterizerDesc, &m_SolidRS);
 }

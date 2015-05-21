@@ -13,6 +13,8 @@
 
 #include "d3dUtil.h"
 
+
+
 class Camera
 {
 public:
@@ -70,6 +72,8 @@ public:
 	void UpdateViewMatrix();
 
 private:
+	
+
 
 	// Camera coordinate system with coordinates relative to world space.
 	XMFLOAT3 mPosition;

@@ -1,3 +1,6 @@
+Texture2D texDiffuse;
+SamplerState samLinear;
+
 cbuffer ConstantBuffer
 {
 	float4x4 wvp;
@@ -7,14 +10,14 @@ struct VertexIn
 {
 	float3 pos : POSITION;
 	float4 color : COLOR;
-	float2 tex : TEXCOORD0;
+	float2 tex : TEXCOORD;
 };
 
 struct VertexOut
 {
 	float4 pos : SV_POSITION;
 	float4 color : COLOR;
-	float2 tex : TEXCOORD0;
+	float2 tex : TEXCOORD;
 };
 
 VertexOut VS(VertexIn vIn)
@@ -32,10 +35,7 @@ VertexOut VS(VertexIn vIn)
 
 float4 PS(VertexOut vOut) : SV_TARGET
 {
-	Texture2D texDiffuse;
-	SamplerState samLinear;
-
-	float4   texColor = texDiffuse.Sample(samLinear, vOut.tex) * vOut.color;
+	float4   texColor = texDiffuse.Sample(samLinear, vOut.tex) *vOut.color;
 	texColor.a = 1.0f;
 
 	return  texColor;

@@ -4,6 +4,10 @@
 #include "Triangle.h"
 #include "HeightMap.h"
 
+#include "Camera.h"
+#include "Layer.h"
+#include "Box.h"
+
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -92,11 +96,15 @@ int Application::Run()
 {
 	MSG message;
 	
-	//Triangle triangle;
-	//triangle.Init();
-
 	HeightMap heightMap;
 	heightMap.Init();
+	
+	Box box;
+	box.Init();
+
+	Layer layer;
+	layer.addChild(&box);
+	layer.addChild(&heightMap);
 
 	
 	while (true)
@@ -113,9 +121,14 @@ int Application::Run()
 		}
 		else
 		{
-			Director::GetInstance()->GameLoop(heightMap);
+			Director::GetInstance()->GameLoop(layer);
 		}
 	}
 
 	return 0;
+}
+
+FLOAT Application::GetWndRatio() const
+{
+	return m_WndWidth / (FLOAT)m_WndHeight;
 }

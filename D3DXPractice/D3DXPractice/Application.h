@@ -12,7 +12,7 @@ public:
 
 	int					GetWndWidth() const;
 	int					GetWndHeight() const;
-
+	FLOAT				GetWndRatio() const;
 
 	int					Run();
 

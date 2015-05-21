@@ -8,6 +8,7 @@
 Node::Node()
 {
 	m_HavingNodes.reserve(10);
+
 }
 
 
@@ -78,18 +79,18 @@ void Node::InitMatrix()
 	// World 青纺 檬扁拳
 	XMStoreFloat4x4(&m_World, XMMatrixIdentity());
 
-	// View 青纺 备己
-	XMVECTOR 	pos = XMVectorSet(0.0f, 0.0f, -5.0f, 1.0f);
-	XMVECTOR 	target = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
-	XMVECTOR 	up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	XMStoreFloat4x4(&m_View, XMMatrixLookAtLH(pos, target, up));
+	//// View 青纺 备己
+	//XMVECTOR 	pos = XMVectorSet(0.0f, 0.0f, -5.0f, 1.0f);
+	//XMVECTOR 	target = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+	//XMVECTOR 	up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	//XMStoreFloat4x4(&m_View, XMMatrixLookAtLH(pos, target, up));
 
-	auto tmpXMMatrix = XMMatrixPerspectiveFovLH(
-		XM_PIDIV2,  	// pi
-		Application::GetInstance()->GetWndWidth() / (FLOAT) Application::GetInstance()->GetWndHeight(), // aspect ratio
-		0.01f, 100.0f);  	// near plane, far plane
-	
-	XMStoreFloat4x4(&m_Projection, tmpXMMatrix);
+	//auto tmpXMMatrix = XMMatrixPerspectiveFovLH(
+	//	XM_PIDIV2,  	// pi
+	//	Application::GetInstance()->GetWndWidth() / (FLOAT) Application::GetInstance()->GetWndHeight(), // aspect ratio
+	//	0.01f, 100.0f);  	// near plane, far plane
+	//
+	//XMStoreFloat4x4(&m_Projection, tmpXMMatrix);
 
 
 

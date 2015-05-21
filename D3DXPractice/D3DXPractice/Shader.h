@@ -1,6 +1,7 @@
 #pragma once
 
 #define  GET_TRIANGLE_SHADER() Shader::GetInstance()
+#define  GET_BOX_SHADER() Shader::GetInstance()
 
 struct MyVertex
 {

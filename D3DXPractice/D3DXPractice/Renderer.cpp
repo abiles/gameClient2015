@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "Director.h"
 #include "Node.h"
+#include "Layer.h"
 
 Renderer::Renderer()
 {
@@ -150,14 +151,14 @@ bool Renderer::Init()
 	return true;
 }
 
-void Renderer::Render(Node& node)
+void Renderer::Render(Layer& layer)
 {
-	float        ClearColor[4] = { 0.0f, 0.0f, 0.5f, 1.0f }; //red,green,blue,alpha
+	float        ClearColor[4] = { 0.1f, 0.1f, 0.1f, 1.0f }; //red,green,blue,alpha
 
 	// Clear
 	m_D3dImmediateContext->ClearRenderTargetView(m_RenderTargetView, ClearColor);
 
-	node.DrawByIndex();
+	layer.DrawByIndex();
 
 	// Render
 	m_SwapChain->Present(0, 0);           // 첫번째 인자 : 갱신 딜레이 

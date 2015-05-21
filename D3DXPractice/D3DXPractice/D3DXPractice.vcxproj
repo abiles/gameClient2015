@@ -126,7 +126,7 @@
   <ItemGroup>
     <FxCompile Include="DefaultShader.fx" />
     <FxCompile Include="HeightMapShader.fx" />
-    <FxCompile Include="TriangleShader.fx" />
+    <FxCompile Include="BoxShader.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

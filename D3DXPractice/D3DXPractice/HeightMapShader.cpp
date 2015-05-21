@@ -67,6 +67,13 @@ void HeightMapShader::CreatePixelShader()
 		0, 0,
 		&PSBlob, &errorBlob, 0);
 
+	if (hr != S_OK)
+	{
+		char buffer[1000] = { 0, };
+		sprintf_s(buffer, 1000, "last error : %d", GetLastError());
+		MessageBoxA(NULL, buffer, "hr error", MB_ICONWARNING | MB_CANCELTRYCONTINUE | MB_DEFBUTTON2);
+	}
+
 	hr = GET_DEVICE()->CreatePixelShader(
 		PSBlob->GetBufferPointer(), PSBlob->GetBufferSize(),
 		nullptr, &m_PixelShader);

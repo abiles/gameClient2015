@@ -4,7 +4,7 @@
 class Triangle : public Node
 {
 public:
-	Triangle();
+	Triangle();	
 	~Triangle();
 
 	void CreateVertexBuffer() override;

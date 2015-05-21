@@ -12,7 +12,6 @@ Shader::Shader()
 
 Shader::~Shader()
 {
-	ReleaseCOM(m_IndexBuffer);
 	ReleaseCOM(m_VertexShader);
 	ReleaseCOM(m_PixelShader);
 	ReleaseCOM(m_VSBlob);
@@ -29,7 +28,7 @@ void Shader::CreateShader()
 void Shader::CreateVertexShader()
 {
 
-	HRESULT hr = D3DX11CompileFromFile(L"DefaultShader.fx", 0, 0,
+	HRESULT hr = D3DX11CompileFromFile(L"BoxShader.fx", 0, 0,
 		"VS", "vs_5_0", 0,
 		0, 0,
 		&m_VSBlob, &m_ErrorBlob, 0);
@@ -48,7 +47,7 @@ void Shader::CreatePixelShader()
 	ID3DBlob* PSBlob = nullptr;
 	ID3DBlob* errorBlob = nullptr;
 
-	D3DX11CompileFromFile(L"DefaultShader.fx", 0, 0,
+	D3DX11CompileFromFile(L"BoxShader.fx", 0, 0,
 		"PS", "ps_5_0", 0,
 		0, 0,
 		&PSBlob, &errorBlob, 0);

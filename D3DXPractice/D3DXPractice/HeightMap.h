@@ -25,20 +25,19 @@ public:
 	void CreateIndexBuffer() override;
 	void CreateConstantBuffer() override;
 	void LoadTexture() override;
+	void CreateRenderState();
 
 	void DrawByIndex() override;
 	void DrawByVertex() override;
 
 private:
-	int              m_IndexSize = 0;
-
-	ID3D11Buffer*    m_VertexBuffer = nullptr;
-	ID3D11Buffer*    m_IndexBuffer = nullptr;
-	ID3D11Buffer*    m_HeightConstantBuffer = nullptr;
-
 	std::vector<int> m_HeightMap;
 
+	int              m_IndexSize = 0;
+	
+	
 	ID3D11ShaderResourceView* m_TextureRV = nullptr;
 	ID3D11SamplerState*		  m_SamplerLinear = nullptr;
+	ID3D11RasterizerState*    m_SolidRS = nullptr;
 };
 

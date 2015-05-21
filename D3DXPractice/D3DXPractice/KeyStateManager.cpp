@@ -14,6 +14,7 @@ KeyStateManager::~KeyStateManager()
 
 void KeyStateManager::KeyInput()
 {
+
 	if (GetKeyboardState(m_ByKey))
 	{
 		// DOWN ¹× UP°è»ê

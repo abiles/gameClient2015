@@ -44,10 +44,40 @@ public:
 
 	void KeyInput();
 
+	void  SetMouseX(float mouseX) { m_MouseX = mouseX; };
+	float GetMouseX()const { return m_MouseX; };
+
+	void  SetMouseY(float mouseY) { m_MouseY = mouseY; };
+	float GetMouseY()const { return m_MouseY; };
+
+	float GetOldMouseX() const { return m_OldMouseX; }
+	void  SetOldMouseX() { m_OldMouseX = m_MouseX; }
+
+	float GetOldMouseY() const { return m_OldMouseY; }
+	void  SetOldMouseY() { m_OldMouseY = m_MouseY; }
+
+	void SetLButtonDown() { LButtonClick = true; };
+	void SetLButtonUp() { LButtonClick = false; };
+	bool IsLButtonClick() const { return LButtonClick; };
+
+	void SetRButtonDown() { RButtonClick = true; };
+	void SetRButtonUp() { RButtonClick = false; };
+	bool IsRButtonClick() const { return RButtonClick; };
+
+	
+
 private:
 	BYTE m_ByOldKey[256];
 	BYTE m_ByKey[256];
 
+	float m_OldMouseX = 0.0f;
+	float m_OldMouseY = 0.0f;
+	
+	float m_MouseX = 0.0f;
+	float m_MouseY = 0.0f;
+	
+	bool LButtonClick = false;
+	bool RButtonClick = false;
 	
 };
 

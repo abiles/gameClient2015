@@ -1,9 +1,12 @@
 #pragma once
 
 
+#define GET_DIRECTOR Director::GetInstance
+
+
 class Camera;
 class KeyStateManager;
-class Node;
+class Layer;
 
 class Director
 {
@@ -14,13 +17,16 @@ public:
 	static Director*	GetInstance();
 
 	LRESULT CALLBACK	WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
-	void				GameLoop(Node& node);
+	void				GameLoop(Layer& layer);
 	void                CameraWalkByKeyState();
+	void				CameraRotateByMouse();
+	Camera*				GetCamera() const;
 
 private:
 
 	KeyStateManager* m_KeyStateManager = nullptr;
 	Camera* m_Camera = nullptr;
+	
 
 };
 

@@ -45,7 +45,6 @@
     <ClInclude Include="Node.h">
       <Filter>Node</Filter>
     </ClInclude>
-    <ClInclude Include="KeyStateManager.h" />
     <ClInclude Include="Box.h">
       <Filter>Node</Filter>
     </ClInclude>
@@ -60,6 +59,9 @@
     </ClInclude>
     <ClInclude Include="HeightMapShader.h">
       <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyStateManager.h">
+      <Filter>Main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -90,7 +92,6 @@
     <ClCompile Include="Node.cpp">
       <Filter>Node</Filter>
     </ClCompile>
-    <ClCompile Include="KeyStateManager.cpp" />
     <ClCompile Include="Box.cpp">
       <Filter>Node</Filter>
     </ClCompile>
@@ -106,15 +107,18 @@
     <ClCompile Include="HeightMapShader.cpp">
       <Filter>Shader</Filter>
     </ClCompile>
+    <ClCompile Include="KeyStateManager.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="TriangleShader.fx">
-      <Filter>Shader</Filter>
-    </FxCompile>
     <FxCompile Include="DefaultShader.fx">
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="HeightMapShader.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="BoxShader.fx">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

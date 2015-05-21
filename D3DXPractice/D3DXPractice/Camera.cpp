@@ -4,6 +4,7 @@
 
 #include "pch.h"
 #include "Camera.h"
+#include "Application.h"
 
 #define PI 3.1415
 
@@ -13,8 +14,13 @@ mRight(1.0f, 0.0f, 0.0f),
 mUp(0.0f, 1.0f, 0.0f),
 mLook(0.0f, 0.0f, 1.0f)
 {
-	//SetLens(0.25f*MathHelper::Pi, 1.0f, 1.0f, 1000.0f);
-	SetLens(0.25f*PI, 1.0f, 1.0f, 1000.0f);
+	// 시야 절두체 만들기
+	FLOAT wndRatio = Application::GetInstance()->GetWndRatio();
+	SetLens(0.25f*PI, wndRatio, 1.0f, 1000.0f); // proj도 생성
+	UpdateViewMatrix(); // View 생성
+	
+	// 카메라를 어느 위치에 놓을까, 어디를 볼까, 어디가 up 일까
+	LookAt(XMFLOAT3(0.0f, 0.0f, -10.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 1.0f, 0.0f));
 
 }
 
